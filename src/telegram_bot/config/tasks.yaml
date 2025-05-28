@@ -1,0 +1,51 @@
+send_email_task:
+  description: > 
+    Sending emails based on user requests while ensuring proper formatting, correct recipients, and clear and professional message content.
+  expected_output: >
+    The email is successfully sent to the intended recipient with the subject, message body, and attachments (if any) as requested by the user, 
+    and provides confirmation that the email has been sent. You can use gmail_tool for the action.
+    Formatted without '```'.
+  agent: gmail_agent
+
+schedule_task:
+  description: >
+    Based on user request, determine whether to create, update, or delete an appointment schedule.
+
+    - If the request is about **creating** a new schedule, extract details (summary, description, start, end).
+    - If the request is about **updating**, modify an existing event with provided details.
+    - If the request is about **deleting**, remove the appointment using event_id.
+
+    using Google Calendar Tool (google_calendar_tool)
+  expected_output : >
+    Confirmation message with the created or updated schedule or success message if the event is deleted. Include appointment schedule link.
+    Formatted without '```'.
+  agent: schedule_agent
+
+handle_query:
+  description: >
+    Process the user message: {message}
+
+    Task: Analyze the user's message and delegate to the appropriate specialist.
+
+    Delegation Rules:
+    1. If the message contains words like ["schedule", "appointment", "meeting", "calendar"]:
+      - Delegate to: "Appointment Management Specialist"
+
+    2. If the message is asking for information on a topic:
+      - Delegate to: "General Information Assistant"
+
+    3. if the message contains words like [send email to... , create email for..., send message...]:
+    - Delegate to: "Email Sender Assistant"
+
+    3. If the message is unclear or doesn't match any rule:
+      - Provide a response asking for clarification.
+
+    Available Coworkers:
+    - Appointment Management Specialist.
+    - General Information Assistant.
+    - Email Sender Assistant.
+
+  expected_output: >
+    The response must be exactly the same as what was input by the user.
+    Formatted without '```'.
+  agent: manager

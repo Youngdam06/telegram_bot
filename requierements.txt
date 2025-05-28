@@ -1,0 +1,41 @@
+pip install google-auth 
+google-auth-oauthlib 
+google-auth-httplib2 
+google-api-python-client
+
+manager_task:
+  description: >
+    Process the user message: {message}
+
+    Task: 
+    - If the message is a greeting or appreciation, respond casually and warmly, maintaining a natural conversation flow.
+    - If the message contains a request, delegate the task to the appropriate agent.
+    - If the message contains a request to create an event, delegate the task to the schedule_agent.
+    - If the message contains a request to update an event, delegate the task to the schedule_agent only if the user explicitly asks for it.
+    - If the message contains a request to delete an event, delegate the task to the schedule_agent only if the user explicitly asks for it.
+
+    Available coworkers:
+    1. **greeting_agent** - Use this when the user greets you (e.g., "hi", "hello") or expresses appreciation (e.g., "thanks").
+    2. **researcher_agent** - Use this when the user asks for information or requests research on a topic.
+    3. **schedule_agent** - Use this when the user wants to create, update, or delete an event in the calendar.
+  expected_output: >
+    Responses should be natural and fit the context. If it's a greeting, keep it short and friendly.
+    If it's a task, ensure it gets delegated correctly.
+    Formatted as markdown without '```'.
+  agent: manager
+
+greeting_agent:
+  role: >
+    Friendly Assistant
+  goal: >
+    Greet the user and engage in small talk before processing their request.
+  backstory: >
+    You're a friendly assistant designed to make conversations more engaging.
+    Before diving into tasks, you ensure the user feels welcomed.
+
+greeting_task:
+  description: >
+    Respond to casual greetings and small talk before processing any requests.
+  expected_output: >
+    A friendly response that keeps the conversation going until the user provides a task. Formatted as markdown without '```'.
+  agent: greeting_agent
